@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8" />
+    <title>Trig Function Graph (Optimized)</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: sans-serif;
+        }
+        canvas {
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+    </style>
+    <script>
+        let ctx;
+        let degree = 0;
+
+        function init() {
+            const canvas = document.getElementById("graph");
+            ctx = canvas.getContext("2d");
+            // ループアニメーションの開始
+            tick();
+        }
+
+        function tick() {
+            degree = (degree + 1) % 360; // 360度でリセットしてオーバーフロー防止
+            paint();
+            requestAnimationFrame(tick); // setIntervalより滑らかで高パフォーマンス
+        }
+
+        function drawLine(x0, y0, x1, y1, color) {
+            ctx.strokeStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(x0, y0);
+            ctx.lineTo(x1, y1);
+            ctx.stroke();
+        }
+
+        function paint() {
+            // 画面クリア
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, 600, 600);
+            
+            ctx.save();
+            ctx.translate(150, 150); // 円の中心を少し外側にずらして見やすく調整
+
+            // 1. 座標軸の描画
+            drawLine(0, -100, 0, 400, "#ccc");
+            drawLine(-100, 0, 400, 0, "#ccc");
+
+            // 2. 現在の角度のラジアン計算
+            const radians = degree * Math.PI / 180;
+            const c = Math.cos(radians) * 50;
+            const s = Math.sin(radians) * -50; // CanvasはY軸下方向が正のためマイナス
+
+            // 3. 単位円の描画（バグ修正：beginPathを独立）
+            ctx.strokeStyle = "black";
+            ctx.beginPath();
+            ctx.arc(0, 0, 50, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // 4. 回転する赤色の針
+            drawLine(0, 0, c, s, "red");
+
+            // 5. sinカーブ (緑)
+            ctx.strokeStyle = "green";
+            ctx.beginPath();
+            ctx.moveTo(0, s); // 針の先端ではなく、Y軸の基準点から開始すると綺麗です
+            for (let i = 0; i < 400; i++) {
+                const s1 = Math.sin((degree + i) * Math.PI / 180) * -50;
+                ctx.lineTo(i, s1);
+            }
+            ctx.stroke();
+
+            // 6. cosカーブ (青)
+            ctx.strokeStyle = "blue";
+            ctx.beginPath();
+            ctx.moveTo(c, 0); // X軸の基準点から開始
+            for (let i = 0; i < 400; i++) {
+                const c1 = Math.cos((degree + i) * Math.PI / 180) * 50;
+                ctx.lineTo(c1, i);
+            }
+            ctx.stroke();
+
+            ctx.restore();
+        }
+    </script>
+</head>
+<body onload="init()">
+    <canvas id="graph" width="600" height="600"></canvas>
+</body>
+</html>
