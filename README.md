@@ -1,4 +1,4 @@
-先ほど作成した「三角関数グラフアニメーション（Node.js Webサーバー版）」のプロジェクト用として、そのまま使える README.md を作成しました。Markdown（.md）ファイルとしてプロジェクトのルートディレクトリに保存してご活用ください。Markdown# Trig Function Graph (Node.js Web Server Edition)
+# Trig Function Graph (Node.js Web Server Edition)
 
 HTML5 Canvas を使用して、単位円の回転運動とそれに同期するサイン波（正弦波）・コサイン波（余弦波）をリアルタイムに描画するインタラクティブなアニメーション作品です。
 Node.js を用いた軽量な Web サーバー上で動作します。
